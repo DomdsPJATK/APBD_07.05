@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
+using APBD_07._05.DTO.Request;
 using APBD_07._05.Model;
 using APBD_07._05.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,33 +13,32 @@ namespace APBD_07._05.Controllers
     
     public class StudentsController : ControllerBase
     {
-        private readonly IStudentServiceDB _context;
+        private readonly IStudentServiceDB _service;
         
-        public StudentsController(IStudentServiceDB context)
+        public StudentsController(IStudentServiceDB service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet("getStudents")]
         public IActionResult GetStudents()
         {
-            return _context.GetStudents();
+            return _service.GetStudents();
         }
         
         [HttpPost("modifyStudent")]
-        public IActionResult modifyStudents()
+        public IActionResult modifyStudents(ModifiedStudentRequest request)
         {
-            return _context.ModifyStudent();
+            Console.WriteLine(request);
+            return new OkObjectResult(_service.ModifyStudent(request));
         }
 
-        [HttpPost("removeStudent/{id}")]
+        [HttpGet("removeStudent/{index}")]
         public IActionResult removeStudent(string index)
         {
-            return _context.DelStudent(index);
+            return _service.DelStudent(index);
         }
-        
-        
-        
+
     }
     
 }

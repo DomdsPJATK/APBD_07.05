@@ -6,20 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace APBD_07._05.Services
 {
-    public class StudentsServiceDataBase : IStudentServiceDB
+    public class EnrollmentStudentSql : IEnrollStudentDB
     {
-
         private readonly s19036Context _context;
 
-        public StudentsServiceDataBase(s19036Context context)
+        public EnrollmentStudentSql(s19036Context context)
         {
             _context = context;
         }
 
-
         public IActionResult PromoteStudent(PromoteStudentRequest request)
         {
-           throw new SystemException();
+            throw new System.NotImplementedException();
         }
 
         public IActionResult EnrollStudent(EnrollStudentRequest request)
@@ -65,23 +63,6 @@ namespace APBD_07._05.Services
             }));
 
         }
-
-        public IActionResult GetStudents()
-        {
-            var res = _context.Student.ToList();
-            return new OkObjectResult(res);
-        }
-
-        public IActionResult ModifyStudent()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IActionResult DelStudent(string index)
-        {
-            _context.Student.Select()
-        }
         
     }
-    
 }

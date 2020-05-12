@@ -10,7 +10,11 @@
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="Controllers" t="Include">
+          <e p="EnrollmentController.cs" t="Include" />
           <e p="StudentsController.cs" t="Include" />
+        </e>
+        <e p="DAL" t="Include">
+          <e p="CustonDateTimeConverter.cs" t="Include" />
         </e>
         <e p="DTO" t="Include">
           <e p="Request" t="Include">
@@ -46,8 +50,10 @@
           <e p="launchSettings.json" t="Include" />
         </e>
         <e p="Services" t="Include">
+          <e p="EnrollmentStudentSql.cs" t="Include" />
+          <e p="IEnrollStudentDB.cs" t="Include" />
           <e p="IStudentServiceDB.cs" t="Include" />
-          <e p="StudentsServiceDataBase.cs" t="Include" />
+          <e p="StudentsServiceSQL.cs" t="Include" />
         </e>
         <e p="Startup.cs" t="Include" />
       </e>

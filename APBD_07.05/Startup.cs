@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using APBD_07._05.Model;
+using APBD_07._05.Services;
+using APBD_19._03_CW3.DTOs.Request;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +29,8 @@ namespace APBD_07._05
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IEnrollStudentDB, EnrollmentStudentSql>();
+            services.AddTransient<IStudentServiceDB, StudentsServiceDataBase>();
             services.AddDbContext<s19036Context>(options =>
                 {
                     options.UseSqlServer(Configuration["ConnectionString"]);

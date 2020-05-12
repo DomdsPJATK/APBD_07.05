@@ -3,6 +3,7 @@ using System.Linq;
 using APBD_07._05.Model;
 using APBD_19._03_CW3.DTOs.Request;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace APBD_07._05.Services
 {
@@ -17,15 +18,28 @@ namespace APBD_07._05.Services
 
         public IActionResult PromoteStudent(PromoteStudentRequest request)
         {
-            throw new System.NotImplementedException();
+            var res = _context.Enrollment.Join(_context.Studies, enrollment => enrollment.IdStudy,
+                studies => studies.IdStudy, ((enrollment, studies) => new
+                {
+                    studies.Name,
+                    enrollment.Semester
+                })).Where(res => res.Name == request.studies && res.Semester == request.semester);
+            
+            if(!res.Any()) return  new BadRequestResult();
+
+            _context.Database.ExecuteSqlInterpolated($"exec promoteStudent {request.studies}, {request.semester}");
+            _context.SaveChanges();
+
+            return new OkObjectResult(request);
         }
 
         public IActionResult EnrollStudent(EnrollStudentRequest request)
         {
-            var studiesId = _context.Studies.Where(studies => studies.Name == request.Studies.Name).Select(studies => new
-            {
-                studies.IdStudy
-            }).First().IdStudy;
+            var studiesId = _context.Studies.Where(studies => studies.Name == request.Studies.Name).Select(studies =>
+                new
+                {
+                    studies.IdStudy
+                }).First().IdStudy;
 
             var enrollRes = _context.Enrollment
                 .Where(enrollment => enrollment.Semester == 1
@@ -51,18 +65,19 @@ namespace APBD_07._05.Services
                 enrollmentId = enrollRes.Select(enrollment => enrollment.IdEnrollment).FirstOrDefault();
 
             var studentExist = _context.Student.Any(enrollment => enrollment.IndexNumber == request.IndexNumber);
-            if(studentExist) return new BadRequestResult();
+            if (studentExist) return new BadRequestResult();
 
-            return new OkObjectResult(_context.Student.Add(new Student()
+            var result = _context.Student.Add(new Student()
             {
                 IndexNumber = request.IndexNumber,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 BirthDate = request.BirthDate,
                 IdEnrollment = enrollmentId
-            }));
+            });
+            _context.SaveChanges();
 
+            return new OkObjectResult(result);
         }
-        
     }
 }
